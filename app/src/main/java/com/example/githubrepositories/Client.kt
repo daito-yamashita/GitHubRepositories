@@ -1,5 +1,7 @@
 package com.example.githubrepositories
 
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -37,7 +39,7 @@ fun createService(): ApiService {
         // 基本のurl
         .baseUrl("https://api.github.com/")
         // Moshiの使用
-        .addConverterFactory(MoshiConverterFactory.create())
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
         // カスタマイズしたokhttpのクライアントの設定
         .client(client)
         .build()
@@ -47,3 +49,8 @@ fun createService(): ApiService {
 
     return API
 }
+
+// Moshiのversion1.9.0以降必要になった
+val moshi = Moshi.Builder()
+    .add(KotlinJsonAdapterFactory())
+    .build()

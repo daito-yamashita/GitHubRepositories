@@ -1,11 +1,8 @@
 package com.example.githubrepositories
 
 data class GitHubResponse (
-    val url: String?,
-    val title: String?,
-    val user: User?
+    val id: String?,
+    val name: String?,
+    val html_url: String?
 )
 
-data class User(
-    val id: String?
-)
