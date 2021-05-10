@@ -1,7 +1,7 @@
 package com.example.githubrepositories
 
-data class Model (
-        val id: String = "",
-        val name: String = "",
-        val html_url: String = ""
-)
+class Model {
+        var title: String? = null
+        var id: String? = null
+        var url: String? = null
+}

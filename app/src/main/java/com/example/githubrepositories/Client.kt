@@ -14,7 +14,7 @@ val httpBuilder: OkHttpClient.Builder get() {
             val original = chain.request()
             val request = original.newBuilder()
                 .header("Accept", "application/json")
-                .method(original.method(), original.body())
+                .method(original.method, original.body)
                 .build()
             var response = chain.proceed(request)
 
