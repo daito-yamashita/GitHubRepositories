@@ -11,14 +11,13 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
-    private var page = 1
     private var mainAdapter: MainAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        fetchMyData()
+//        fetchMyData()
 
         createRecyclerView()
 
@@ -61,7 +60,8 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
 
         // Adapterを生成してRecyclerViewにセット
-        mainAdapter = MainAdapter(createRowData(page))
+//        mainAdapter = MainAdapter(createRowData(page))
+        mainAdapter = MainAdapter(fetchMyData())
         recyclerView.adapter = mainAdapter
     }
 
