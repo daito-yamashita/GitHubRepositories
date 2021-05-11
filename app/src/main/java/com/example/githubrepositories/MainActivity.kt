@@ -18,8 +18,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        fetchMyData()
-
         createRecyclerView()
 
     }
@@ -65,25 +63,8 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
 
         // Adapterを生成してRecyclerViewにセット
-//        mainAdapter = MainAdapter(createRowData(page))
         mainAdapter = MainAdapter(fetchMyData())
         recyclerView.adapter = mainAdapter
-    }
-
-    private fun createRowData(page: Int): List<RowData> {
-        val dataSet: MutableList<RowData> = ArrayList()
-        var i = 1
-        while(i < page * 20) {
-            val data = RowData()
-            data.title = "title" + Integer.toString(i)
-            dataSet.add(data)
-            i += 1
-        }
-        return dataSet
-    }
-
-    inner class RowData {
-        var title: String? = null
     }
 }
 
