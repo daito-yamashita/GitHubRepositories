@@ -3,17 +3,35 @@ package com.example.githubrepositories
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
+    private var page = 1
+    private var mainAdapter: MainAdapter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         fetchMyData()
+
+        val recyclerView: RecyclerView = findViewById(R.id.main_recycler_view)
+
+        // recyclerViewのレイアウトサイズを変更しない設定をONにする
+        recyclerView.setHasFixedSize(true)
+
+        // recyclerViewにlayoutManagerをセットする
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = layoutManager
+
+        // Adapterを生成してRecyclerViewにセット
+        mainAdapter = MainAdapter(createRowData(page))
+        recyclerView.adapter = mainAdapter
     }
 
     private fun fetchMyData(): List<Model> {
@@ -40,6 +58,22 @@ class MainActivity : AppCompatActivity() {
             }
         })
         return dataList
+    }
+
+    private fun createRowData(page: Int): List<RowData> {
+        val dataSet: MutableList<RowData> = ArrayList()
+        var i = 1
+        while(i < page * 20) {
+            val data = RowData()
+            data.title = "title" + Integer.toString(i)
+            dataSet.add(data)
+            i += 1
+        }
+        return dataSet
+    }
+
+    inner class RowData {
+        var title: String? = null
     }
 }
 
