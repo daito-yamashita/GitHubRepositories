@@ -20,18 +20,8 @@ class MainActivity : AppCompatActivity() {
 
         fetchMyData()
 
-        val recyclerView: RecyclerView = findViewById(R.id.main_recycler_view)
+        createRecyclerView()
 
-        // recyclerViewのレイアウトサイズを変更しない設定をONにする
-        recyclerView.setHasFixedSize(true)
-
-        // recyclerViewにlayoutManagerをセットする
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
-
-        // Adapterを生成してRecyclerViewにセット
-        mainAdapter = MainAdapter(createRowData(page))
-        recyclerView.adapter = mainAdapter
     }
 
     private fun fetchMyData(): List<Model> {
@@ -58,6 +48,21 @@ class MainActivity : AppCompatActivity() {
             }
         })
         return dataList
+    }
+
+    private fun createRecyclerView() {
+        val recyclerView: RecyclerView = findViewById(R.id.main_recycler_view)
+
+        // recyclerViewのレイアウトサイズを変更しない設定をONにする
+        recyclerView.setHasFixedSize(true)
+
+        // recyclerViewにlayoutManagerをセットする
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = layoutManager
+
+        // Adapterを生成してRecyclerViewにセット
+        mainAdapter = MainAdapter(createRowData(page))
+        recyclerView.adapter = mainAdapter
     }
 
     private fun createRowData(page: Int): List<RowData> {
