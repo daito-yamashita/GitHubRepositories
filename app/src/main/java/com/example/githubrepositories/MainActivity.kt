@@ -3,17 +3,23 @@ package com.example.githubrepositories
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
+    private var mainAdapter: MainAdapter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        fetchMyData()
+        createRecyclerView()
+
     }
 
     private fun fetchMyData(): List<Model> {
@@ -40,6 +46,25 @@ class MainActivity : AppCompatActivity() {
             }
         })
         return dataList
+    }
+
+    private fun createRecyclerView() {
+        val recyclerView: RecyclerView = findViewById(R.id.main_recycler_view)
+
+        // recyclerViewのレイアウトサイズを変更しない設定をONにする
+        recyclerView.setHasFixedSize(true)
+
+        // recyclerViewに区切り線を追加
+        val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        recyclerView.addItemDecoration(itemDecoration)
+
+        // recyclerViewにlayoutManagerをセットする
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = layoutManager
+
+        // Adapterを生成してRecyclerViewにセット
+        mainAdapter = MainAdapter(fetchMyData())
+        recyclerView.adapter = mainAdapter
     }
 }
 
