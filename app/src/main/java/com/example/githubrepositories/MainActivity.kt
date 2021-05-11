@@ -3,6 +3,7 @@ package com.example.githubrepositories
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -54,6 +55,10 @@ class MainActivity : AppCompatActivity() {
 
         // recyclerViewのレイアウトサイズを変更しない設定をONにする
         recyclerView.setHasFixedSize(true)
+
+        // recyclerViewに区切り線を追加
+        val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        recyclerView.addItemDecoration(itemDecoration)
 
         // recyclerViewにlayoutManagerをセットする
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
