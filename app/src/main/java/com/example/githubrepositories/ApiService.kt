@@ -5,7 +5,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
 
 interface ApiService {
-    @GET("users/{user}}/repos")
+    @GET("users/{user}/repos")
 
     fun getGitHub(@Path("user") user: String): retrofit2.Call<List<GitHubResponse>>
 }
