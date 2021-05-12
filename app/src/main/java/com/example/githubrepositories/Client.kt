@@ -15,6 +15,7 @@ val httpBuilder: OkHttpClient.Builder get() {
         httpClient.addInterceptor(Interceptor { chain ->
             val original = chain.request()
             val request = original.newBuilder()
+                    // MIMEタイプでリクエストする
                 .header("Accept", "application/json")
                 .method(original.method, original.body)
                 .build()

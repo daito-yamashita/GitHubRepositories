@@ -18,11 +18,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        createRecyclerView()
-
+        fetchMyData()
     }
 
-    private fun fetchMyData(): List<Model> {
+    private fun fetchMyData() {
         val dataList = mutableListOf<Model>()
         createService().getGitHub("daito-yamashita").enqueue(object: Callback<List<GitHubResponse>> {
             // 非同期処理
@@ -38,6 +37,8 @@ class MainActivity : AppCompatActivity() {
                             }
                             dataList.add(data)
                         }
+                        // ここでRecyclerViewを表示させないと、非同期処理の実行順番の兼ね合いで何も表示されない
+                        createRecyclerView(dataList)
                     }
                 }
             }
@@ -45,10 +46,9 @@ class MainActivity : AppCompatActivity() {
                 Log.d("TAGres", "onFailure")
             }
         })
-        return dataList
     }
 
-    private fun createRecyclerView() {
+    private fun createRecyclerView(dataList: List<Model>) {
         val recyclerView: RecyclerView = findViewById(R.id.main_recycler_view)
 
         // recyclerViewのレイアウトサイズを変更しない設定をONにする
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
 
         // Adapterを生成してRecyclerViewにセット
-        mainAdapter = MainAdapter(fetchMyData())
+        mainAdapter = MainAdapter(dataList)
         recyclerView.adapter = mainAdapter
     }
 }
