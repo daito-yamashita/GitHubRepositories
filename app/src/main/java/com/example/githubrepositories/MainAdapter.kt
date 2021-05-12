@@ -13,6 +13,8 @@ class MainAdapter internal constructor(private var modelList: List<Model>) : Rec
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         val model = modelList[position]
         holder.title.text = model.name
+        holder.language.text = model.language
+        holder.updated.text = model.updated_at
     }
 
     override fun getItemCount(): Int {
