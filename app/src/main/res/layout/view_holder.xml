@@ -20,23 +20,29 @@
             android:textSize="20dp"
             android:paddingBottom="10dp"/>
 
-        <TextView
-            android:id="@+id/language_text_view"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="language"
-            android:textSize="10dp"
-            android:layout_below="@+id/title_text_view"/>
+            android:layout_below="@+id/title_text_view">
 
-        <TextView
-            android:id="@+id/updated_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="updated"
-            android:textSize="10dp"
-            android:paddingLeft="20dp"
-            android:layout_toRightOf="@+id/language_text_view"
-            android:layout_alignTop="@+id/language_text_view"/>
+            <TextView
+                android:id="@+id/language_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="language"
+                android:textSize="10dp"
+                android:paddingRight="20dp" />
+
+            <TextView
+                android:id="@+id/updated_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="updated"
+                android:textSize="10dp"
+                android:layout_toRightOf="@+id/language_text_view"
+                android:layout_alignTop="@+id/language_text_view"/>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

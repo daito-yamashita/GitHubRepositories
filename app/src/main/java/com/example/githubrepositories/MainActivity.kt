@@ -34,6 +34,8 @@ class MainActivity : AppCompatActivity() {
                                 it.id = item.id
                                 it.name = item.name
                                 it.html_url = item.html_url
+                                it.language = item.language
+                                it.updated_at = item.updated_at
                             }
                             dataList.add(data)
                         }
