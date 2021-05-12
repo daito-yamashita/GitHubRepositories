@@ -1,6 +1,7 @@
 package com.example.githubrepositories
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
@@ -15,6 +16,11 @@ class MainAdapter internal constructor(private var modelList: List<Model>) : Rec
         holder.title.text = model.name
         holder.language.text = model.language
         holder.updated.text = model.updated_at
+
+        // `holder.language.text` だとnullが取ってこれなかった
+        if (model.language == null) {
+            holder.language.setVisibility(View.GONE)
+        }
     }
 
     override fun getItemCount(): Int {
