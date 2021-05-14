@@ -1,9 +1,14 @@
 package com.example.githubrepositories
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 class MainAdapter internal constructor(private var modelList: List<Model>) : RecyclerView.Adapter<MainViewHolder>() {
     private lateinit var listener: OnCellClickListener
@@ -22,15 +27,49 @@ class MainAdapter internal constructor(private var modelList: List<Model>) : Rec
     }
 
     // 各部品に持たせたいデータを割り当てるメソッド
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         val model = modelList[position]
         holder.title.text = model.name
         holder.language.text = model.language
-        holder.updated.text = model.updated_at
+//        holder.updated.text = model.updated_at
+
+//        holder.updated.text = "updated! "
+
+        val updatedTimeText = model.updated_at
+        holder.updated.text = getDateDifference(updatedTimeText)
+
+//        holder.updated.text = {
+//            var updatedText = "updated "
+//            val nowDateTime = LocalDateTime.now()
+//            val updatedDateTime = LocalDateTime.parse(model.updated_at)
+//            val diff = ChronoUnit.MILLIS.between(nowDateTime, updatedDateTime)
+//
+//            updatedText += {
+//                val sec = diff / 1000L
+//                val min = sec / 60L
+//                if (min == 0L) {
+//                    updatedText@ "${sec}s ago"
+//                }
+//
+//                val hour = min / 60L
+//                if (hour == 0L) {
+//                    updatedText@ "${min}m ago"
+//                }
+//
+//                val day = hour / 24L
+//                if (day == 0L) {
+//                    updatedText@ "${hour}h ago"
+//                }
+//
+//                updatedText@ "${day}d ago"
+//            }
+//            updatedText
+//        }.toString()
 
         // `holder.language.text` だとnullが取ってこれなかったので `model.language` を使う
         if (model.language == null) {
-            holder.language.setVisibility(View.GONE)
+            holder.language.visibility = View.GONE
         }
 
         // セルのクリックイベントにリスナをセット
@@ -41,5 +80,45 @@ class MainAdapter internal constructor(private var modelList: List<Model>) : Rec
 
     override fun getItemCount(): Int {
         return modelList.size
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getDateDifference(updatedDataTimeText: String?): CharSequence? {
+        var updatedText = "updated "
+        val nowDateTime = LocalDateTime.now()
+        val updatedDateTime = LocalDateTime.parse(updatedDataTimeText, DateTimeFormatter.ISO_DATE_TIME)
+        val diff = ChronoUnit.SECONDS.between(updatedDateTime, nowDateTime)
+
+        val sec = diff
+        val min = sec / 60L
+        if (min == 0L) {
+            updatedText += "${sec}s ago"
+            return updatedText
+        }
+
+        val hour = min / 60L
+        if (hour == 0L) {
+            updatedText += "${min}m ago"
+            return updatedText
+        }
+
+        val day = hour / 24L
+        if (day == 0L) {
+            updatedText += "${hour}h ago"
+            return updatedText
+        }
+
+        val month = day / 30L
+        if (month == 0L) {
+            if (day == 1L) {
+                updatedText += "yesterday"
+                return updatedText
+            }
+            updatedText += "${day}days ago"
+            return updatedText
+        }
+
+        updatedText += "on ${updatedDateTime.dayOfMonth} ${updatedDateTime.month}"
+        return updatedText
     }
 }
