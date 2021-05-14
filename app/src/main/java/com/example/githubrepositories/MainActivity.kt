@@ -1,5 +1,7 @@
 package com.example.githubrepositories
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,61 +14,72 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
-    private var mainAdapter: MainAdapter? = null
+private lateinit var mainAdapter: MainAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
 
-        fetchMyData()
-    }
+    fetchMyData()
 
-    private fun fetchMyData() {
-        val dataList = mutableListOf<Model>()
-        createService().getGitHub("daito-yamashita").enqueue(object: Callback<List<GitHubResponse>> {
-            // 非同期処理
-            override fun onResponse(call: Call<List<GitHubResponse>>, response: Response<List<GitHubResponse>>) {
-                Log.d("TAGres", "onResponse")
-                if(response.isSuccessful) {
-                    response.body()?.let {
-                        for(item in it) {
-                            val data: Model = Model().also {
-                                it.id = item.id
-                                it.name = item.name
-                                it.html_url = item.html_url
-                                it.language = item.language
-                                it.updated_at = item.updated_at
-                            }
-                            dataList.add(data)
+}
+
+private fun fetchMyData() {
+    val dataList = mutableListOf<Model>()
+    createService().getGitHub("daito-yamashita").enqueue(object: Callback<List<GitHubResponse>> {
+        // 非同期処理
+        override fun onResponse(call: Call<List<GitHubResponse>>, response: Response<List<GitHubResponse>>) {
+            Log.d("TAGres", "onResponse")
+            if(response.isSuccessful) {
+                response.body()?.let {
+                    for(item in it) {
+                        val data: Model = Model().also {
+                            it.html_url =item.html_url
+                            it.name = item.name
+                            it.language = item.language
+                            it.updated_at = item.updated_at
                         }
-                        // ここでRecyclerViewを表示させないと、非同期処理の実行順番の兼ね合いで何も表示されない
-                        createRecyclerView(dataList)
+                        dataList.add(data)
                     }
+
+                    // ここでRecyclerViewを表示させないと、非同期処理の実行順番の兼ね合いで何も表示されない
+                    createRecyclerView(dataList)
+
+                    // この処理も同様に、このタイミングで実行しないとクリックしたときに何も反応しない
+                    mainAdapter.setOnCellClickListener(
+                            object : MainAdapter.OnCellClickListener {
+                                override fun onItemClick(model: Model) {
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(model.html_url))
+                                    startActivity(intent)
+                                }
+                            }
+                    )
                 }
             }
-            override fun onFailure(call: Call<List<GitHubResponse>>, t: Throwable) {
-                Log.d("TAGres", "onFailure")
-            }
-        })
-    }
+        }
+        override fun onFailure(call: Call<List<GitHubResponse>>, t: Throwable) {
+            Log.d("TAGres", "onFailure")
+        }
+    })
+}
 
-    private fun createRecyclerView(dataList: List<Model>) {
-        val recyclerView: RecyclerView = findViewById(R.id.main_recycler_view)
+private fun createRecyclerView(dataList: List<Model>) {
+    val recyclerView: RecyclerView = findViewById(R.id.main_recycler_view)
 
-        // recyclerViewのレイアウトサイズを変更しない設定をONにする
-        recyclerView.setHasFixedSize(true)
+    // recyclerViewのレイアウトサイズを変更しない設定をONにする
+    recyclerView.setHasFixedSize(true)
 
-        // recyclerViewに区切り線を追加
-        val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        recyclerView.addItemDecoration(itemDecoration)
+    // recyclerViewに区切り線を追加
+    val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+    recyclerView.addItemDecoration(itemDecoration)
 
-        // recyclerViewにlayoutManagerをセットする
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
+    // recyclerViewにlayoutManagerをセットする
+    val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+    recyclerView.layoutManager = layoutManager
 
-        // Adapterを生成してRecyclerViewにセット
-        mainAdapter = MainAdapter(dataList)
-        recyclerView.adapter = mainAdapter
-    }
+    // Adapterを生成してRecyclerViewにセット
+    mainAdapter = MainAdapter(dataList)
+    recyclerView.adapter = mainAdapter
+}
 }
 
