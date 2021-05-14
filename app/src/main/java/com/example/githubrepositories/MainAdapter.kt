@@ -35,7 +35,7 @@ class MainAdapter internal constructor(private var modelList: List<Model>) : Rec
         holder.title.text = model.name
         holder.language.text = model.language
 
-        val updatedTimeText = model.updated_at
+        val updatedTimeText = model.pushed_at
         holder.updated.text = getDateDifference(updatedTimeText)
 
         // `holder.language.text` だとnullが取ってこれなかったので `model.language` を使う
