@@ -14,7 +14,7 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
-private var mainAdapter: MainAdapter? = null
+private lateinit var mainAdapter: MainAdapter
 
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -41,10 +41,12 @@ private fun fetchMyData() {
                         }
                         dataList.add(data)
                     }
+
                     // ここでRecyclerViewを表示させないと、非同期処理の実行順番の兼ね合いで何も表示されない
                     createRecyclerView(dataList)
 
-                    mainAdapter?.setOnCellClickListener(
+                    // この処理も同様に、このタイミングで実行しないとクリックしたときに何も反応しない
+                    mainAdapter.setOnCellClickListener(
                             object : MainAdapter.OnCellClickListener {
                                 override fun onItemClick(model: Model) {
                                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(model.html_url))

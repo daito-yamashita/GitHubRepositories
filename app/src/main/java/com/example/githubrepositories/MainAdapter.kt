@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class MainAdapter internal constructor(private var modelList: List<Model>) : RecyclerView.Adapter<MainViewHolder>() {
-    private var listener: OnCellClickListener? = null
+    private lateinit var listener: OnCellClickListener
 
     interface OnCellClickListener {
         fun onItemClick(model: Model)
@@ -21,19 +21,21 @@ class MainAdapter internal constructor(private var modelList: List<Model>) : Rec
         return MainViewHolder(view)
     }
 
+    // 各部品に持たせたいデータを割り当てるメソッド
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         val model = modelList[position]
         holder.title.text = model.name
         holder.language.text = model.language
         holder.updated.text = model.updated_at
 
-        // `holder.language.text` だとnullが取ってこれなかった
+        // `holder.language.text` だとnullが取ってこれなかったので `model.language` を使う
         if (model.language == null) {
             holder.language.setVisibility(View.GONE)
         }
 
+        // セルのクリックイベントにリスナをセット
         holder.itemView.setOnClickListener {
-            listener?.onItemClick(model)
+            listener.onItemClick(model)
         }
     }
 
