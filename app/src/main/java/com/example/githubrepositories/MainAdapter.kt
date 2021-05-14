@@ -6,6 +6,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class MainAdapter internal constructor(private var modelList: List<Model>) : RecyclerView.Adapter<MainViewHolder>() {
+    private lateinit var listener: OnCellClickLitener
+
+    interface OnCellClickLitener {
+        fun onItemClick(model: Model)
+    }
+
+    fun setOnCellClickListener(listener: OnCellClickLitener) {
+        this.listener = listener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.view_holder, parent, false)
         return MainViewHolder(view)
@@ -20,6 +30,10 @@ class MainAdapter internal constructor(private var modelList: List<Model>) : Rec
         // `holder.language.text` だとnullが取ってこれなかった
         if (model.language == null) {
             holder.language.setVisibility(View.GONE)
+        }
+
+        holder.itemView.setOnClickListener {
+            listener.onItemClick(model)
         }
     }
 

@@ -1,5 +1,7 @@
 package com.example.githubrepositories
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +21,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         fetchMyData()
+
+        mainAdapter?.setOnCellClickListener(
+                object : MainAdapter.OnCellClickLitener {
+                    override fun onItemClick(model: Model) {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/daito-yamashita?tab=repositories"))
+                        startActivity(intent)
+                    }
+                }
+        )
     }
 
     private fun fetchMyData() {
@@ -31,6 +42,7 @@ class MainActivity : AppCompatActivity() {
                     response.body()?.let {
                         for(item in it) {
                             val data: Model = Model().also {
+                                it.html_url =item.html_url
                                 it.name = item.name
                                 it.language = item.language
                                 it.updated_at = item.updated_at
