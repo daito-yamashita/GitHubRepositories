@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class MainAdapter internal constructor(private var modelList: List<Model>) : RecyclerView.Adapter<MainViewHolder>() {
-    private lateinit var listener: OnCellClickLitener
+    private var listener: OnCellClickListener? = null
 
-    interface OnCellClickLitener {
+    interface OnCellClickListener {
         fun onItemClick(model: Model)
     }
 
-    fun setOnCellClickListener(listener: OnCellClickLitener) {
+    fun setOnCellClickListener(listener: OnCellClickListener) {
         this.listener = listener
     }
 
@@ -33,7 +33,7 @@ class MainAdapter internal constructor(private var modelList: List<Model>) : Rec
         }
 
         holder.itemView.setOnClickListener {
-            listener.onItemClick(model)
+            listener?.onItemClick(model)
         }
     }
 
