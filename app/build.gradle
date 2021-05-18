@@ -33,10 +33,16 @@ android {
 }
 
 dependencies {
+    // RxJava
+    def rxjava_version = "3.0.13"
+    implementation "io.reactivex.rxjava:$rxjava_version"
+    implementation "io.reactivex.rxkotlin:$rxjava_version"
+
     // Retrofit
     def retrofit_version = "2.9.0"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit_version"
 
     // Moshi
     def moshi_version = "1.12.0"
