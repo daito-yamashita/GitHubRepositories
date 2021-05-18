@@ -31,7 +31,7 @@ private fun fetchMyData() {
         override fun onResponse(call: Call<List<GitHubResponse>>, response: Response<List<GitHubResponse>>) {
             Log.d("TAGres", "onResponse")
             if(response.isSuccessful) {
-                response.body()?.let {
+                response.body()?.let { it ->
                     for(item in it) {
                         val data: Model = Model().also {
                             it.html_url =item.html_url

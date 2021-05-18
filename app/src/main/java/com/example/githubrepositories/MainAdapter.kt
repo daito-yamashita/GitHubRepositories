@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -54,13 +53,12 @@ class MainAdapter internal constructor(private var modelList: List<Model>) : Rec
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun getDateDifference(updatedDataTimeText: String?): CharSequence? {
+    private fun getDateDifference(updatedDataTimeText: String?): CharSequence {
         var updatedText = "updated "
         val nowDateTime = OffsetDateTime.now()
         val updatedDateTime = OffsetDateTime.parse(updatedDataTimeText, DateTimeFormatter.ISO_DATE_TIME)
-        val diff = ChronoUnit.SECONDS.between(updatedDateTime, nowDateTime)
+        val sec = ChronoUnit.SECONDS.between(updatedDateTime, nowDateTime)
 
-        val sec = diff
         val min = sec / 60L
         if (min == 0L) {
             if (sec == 1L) {
