@@ -4,6 +4,6 @@ data class GitHubResponse (
     val html_url: String?,
     val name: String?,
     val language: String?,
-    val updated_at: String?
+    val pushed_at: String?
 )
 

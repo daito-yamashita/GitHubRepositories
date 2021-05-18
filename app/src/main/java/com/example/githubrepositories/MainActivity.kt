@@ -31,16 +31,17 @@ private fun fetchMyData() {
         override fun onResponse(call: Call<List<GitHubResponse>>, response: Response<List<GitHubResponse>>) {
             Log.d("TAGres", "onResponse")
             if(response.isSuccessful) {
-                response.body()?.let {
+                response.body()?.let { it ->
                     for(item in it) {
                         val data: Model = Model().also {
                             it.html_url =item.html_url
                             it.name = item.name
                             it.language = item.language
-                            it.updated_at = item.updated_at
+                            it.pushed_at = item.pushed_at
                         }
                         dataList.add(data)
                     }
+                    dataList.sortByDescending { it.pushed_at }
 
                     // ここでRecyclerViewを表示させないと、非同期処理の実行順番の兼ね合いで何も表示されない
                     createRecyclerView(dataList)
