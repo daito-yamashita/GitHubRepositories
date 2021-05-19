@@ -1,11 +1,14 @@
 package com.example.githubrepositories
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MainActivity : AppCompatActivity() {
@@ -21,58 +24,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchMyData() {
-        val dataList = mutableListOf<Model>()
         createService()
-            .getGitHub("daito-yamashita")
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .subscribe({
-                Log.d("TAG", "Success")
-            }, {
-                Log.d("TAG", "Failure")
-
-            })
-
-
-//    createService().getGitHub("daito-yamashita").enqueue(object: Callback<List<GitHubResponse>> {
-//        // 非同期処理
-//        override fun onResponse(call: Call<List<GitHubResponse>>, response: Response<List<GitHubResponse>>) {
-//            Log.d("TAGres", "onResponse")
-//            if(response.isSuccessful) {
-//                response.body()?.let { it ->
-//                    for(item in it) {
-//                        val data: Model = Model().also {
-//                            it.html_url =item.html_url
-//                            it.name = item.name
-//                            it.language = item.language
-//                            it.pushed_at = item.pushed_at
-//                        }
-//                        dataList.add(data)
-//                    }
-//                    dataList.sortByDescending { it.pushed_at }
-//
-//                    // ここでRecyclerViewを表示させないと、非同期処理の実行順番の兼ね合いで何も表示されない
-//                    createRecyclerView(dataList)
-//
-//                    // この処理も同様に、このタイミングで実行しないとクリックしたときに何も反応しない
-//                    mainAdapter.setOnCellClickListener(
-//                            object : MainAdapter.OnCellClickListener {
-//                                override fun onItemClick(model: Model) {
-//                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(model.html_url))
-//                                    startActivity(intent)
-//                                }
-//                            }
-//                    )
-//                }
-//            }
-//        }
-//        override fun onFailure(call: Call<List<GitHubResponse>>, t: Throwable) {
-//            Log.d("TAGres", "onFailure")
-//        }
-//    })
+                .getGitHub("daito-yamashita")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    // RecyclerViewの作成、更新を行う
+                    createRecyclerView(it)
+                    mainAdapter.setOnCellClickListener(
+                            object : MainAdapter.OnCellClickListener {
+                                override fun onItemClick(model: GitHubResponse) {
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(model.html_url))
+                                    startActivity(intent)
+                                }
+                            }
+                    )
+                    Log.d("TAG", "subscribe = $it")
+                }
     }
 
-    private fun createRecyclerView(dataList: List<Model>) {
+    private fun createRecyclerView(dataList: List<GitHubResponse>) {
         val recyclerView: RecyclerView = findViewById(R.id.main_recycler_view)
 
         // recyclerViewのレイアウトサイズを変更しない設定をONにする
