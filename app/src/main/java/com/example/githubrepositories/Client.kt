@@ -5,6 +5,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
@@ -39,6 +40,8 @@ fun createService(): ApiService {
         .baseUrl("https://api.github.com/")
         // Moshiの使用
         .addConverterFactory(MoshiConverterFactory.create(moshi))
+        // RxJavaの利用
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         // カスタマイズしたokhttpのクライアントの設定
         .client(client)
         .build()

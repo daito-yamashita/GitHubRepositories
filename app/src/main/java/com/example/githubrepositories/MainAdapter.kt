@@ -10,11 +10,11 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
-class MainAdapter internal constructor(private var modelList: List<Model>) : RecyclerView.Adapter<MainViewHolder>() {
+class MainAdapter internal constructor(private var modelList: List<GitHubResponse>) : RecyclerView.Adapter<MainViewHolder>() {
     private lateinit var listener: OnCellClickListener
 
     interface OnCellClickListener {
-        fun onItemClick(model: Model)
+        fun onItemClick(model: GitHubResponse)
     }
 
     fun setOnCellClickListener(listener: OnCellClickListener) {

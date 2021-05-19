@@ -1,11 +1,12 @@
 package com.example.githubrepositories
 
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.*
+//import java.util.*http
+import io.reactivex.rxjava3.core.Observable
+import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface ApiService {
     @GET("users/{user}/repos")
 
-    fun getGitHub(@Path("user") user: String): retrofit2.Call<List<GitHubResponse>>
+    fun getGitHub(@Path("user") user: String): Observable<List<GitHubResponse>>
 }
