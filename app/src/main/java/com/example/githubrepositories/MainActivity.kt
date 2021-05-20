@@ -28,6 +28,11 @@ class MainActivity : AppCompatActivity() {
                 .getGitHub("daito-yamashita")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .map {
+                    it.sortedByDescending { gitHubResponse ->
+                        gitHubResponse.pushed_at
+                    }
+                }
                 .subscribe {
                     // RecyclerViewの作成、更新を行う
                     createRecyclerView(it)
