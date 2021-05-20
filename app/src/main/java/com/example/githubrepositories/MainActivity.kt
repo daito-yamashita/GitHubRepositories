@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
                         gitHubResponse.pushed_at
                     }
                 }
-                .subscribe {
+                .subscribe({
                     // RecyclerViewの作成、更新を行う
                     createRecyclerView(it)
                     mainAdapter.setOnCellClickListener(
@@ -45,7 +45,10 @@ class MainActivity : AppCompatActivity() {
                             }
                     )
                     Log.d("TAG", "subscribe = $it")
-                }
+                },{
+                    Log.d("TAG", "failure = $it")
+                })
+
     }
 
     private fun createRecyclerView(dataList: List<GitHubResponse>) {
