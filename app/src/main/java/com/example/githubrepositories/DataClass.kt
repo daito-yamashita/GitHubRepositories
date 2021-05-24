@@ -17,4 +17,6 @@ class Model(
     val language: String? = null,
     val pushed_at: String,
     val avatar_url: String
+//    val repository: GitHubRepository,
+//    val profile: GitHubProfile
         )

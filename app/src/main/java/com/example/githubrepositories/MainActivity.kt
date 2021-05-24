@@ -26,11 +26,33 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchMyData() {
-//        val dataList = MutableList<Model>()
         Single
-            .zip(single1(), single2(), BiFunction<List<GitHubRepository> ,GitHubProfile, List<Model>> { s1, s2 ->
-                listOf(Model(s1.first().html_url, s1.first().name, s1.first().language, s1.first().pushed_at, s2.avatar_url))
-            })
+            .zip(
+                single1(),
+                single2(),
+                BiFunction<List<GitHubRepository>, GitHubProfile, List<Model>> { s1, s2 ->
+                    val dataList = mutableListOf<Model>()
+                    for (item in s1) {
+                        val data: Model = Model(
+                            html_url = item.html_url,
+                            name = item.name,
+                            language = item.language,
+                            pushed_at = item.pushed_at,
+                            avatar_url = s2.avatar_url
+                        )
+                        dataList.add(data)
+                    }
+//                    listOf(
+//                        Model(
+//                            s1.first().html_url,
+//                            s1.first().name,
+//                            s1.first().language,
+//                            s1.first().pushed_at,
+//                            s2.avatar_url
+//                        )
+//                    )
+                    dataList
+                })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
