@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -33,6 +34,8 @@ class MainAdapter internal constructor(private var modelList: List<Model>) : Rec
 
         holder.title.text = model.name
         holder.language.text = model.language
+
+        Picasso.get().load(model.avatar_url).into(holder.icon)
 
         val updatedTimeText = model.pushed_at
         holder.updated.text = getDateDifference(updatedTimeText)
