@@ -13,6 +13,8 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.schedulers.Schedulers
 
+const val CONSTANT_USER_NAME: String = "daito-yamashita"
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainAdapter: MainAdapter
@@ -75,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun single1(): Single<List<GitHubRepository>> {
         return createService()
-            .getRepository("daito-yamashita")
+            .getRepository(CONSTANT_USER_NAME)
             .map {
                 it.sortedByDescending { gitHubResponse ->
                     gitHubResponse.pushed_at
@@ -85,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun single2(): Single<GitHubProfile> {
         return createService()
-            .getProfile("daito-yamashita")
+            .getProfile(CONSTANT_USER_NAME)
     }
 
     private fun createRecyclerView(dataList: List<Model>) {
