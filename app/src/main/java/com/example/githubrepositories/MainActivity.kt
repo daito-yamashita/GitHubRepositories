@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
                 BiFunction<List<GitHubRepository>, GitHubProfile, List<Model>> { s1, s2 ->
                     val dataList = mutableListOf<Model>()
                     for (item in s1) {
-                        val data: Model = Model(
+                        val data = Model(
                             html_url = item.html_url,
                             name = item.name,
                             language = item.language,
@@ -44,15 +44,6 @@ class MainActivity : AppCompatActivity() {
                         )
                         dataList.add(data)
                     }
-//                    listOf(
-//                        Model(
-//                            s1.first().html_url,
-//                            s1.first().name,
-//                            s1.first().language,
-//                            s1.first().pushed_at,
-//                            s2.avatar_url
-//                        )
-//                    )
                     dataList
                 })
             .subscribeOn(Schedulers.io())
