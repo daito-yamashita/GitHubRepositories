@@ -12,7 +12,7 @@ data class GitHubProfile(
 )
 
 class Model(
-    var html_url: String,
+    val html_url: String,
     val name: String,
     val language: String? = null,
     val pushed_at: String,

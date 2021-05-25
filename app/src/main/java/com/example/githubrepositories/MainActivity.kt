@@ -29,21 +29,50 @@ class MainActivity : AppCompatActivity() {
 
     private fun fetchMyData() {
         Single.zip(
-                single1(),
-                single2(),
-                BiFunction<List<GitHubRepository>, GitHubProfile, List<Model>> { s1, s2 ->
-                    val dataList = mutableListOf<Model>()
-                    for (item in s1) {
-                        val data = Model(
-                                html_url = item.html_url,
-                                name = item.name,
-                                language = item.language,
-                                pushed_at = item.pushed_at,
-                                avatar_url = s2.avatar_url
-                        )
-                        dataList.add(data)
-                    }
-                    dataList
+                getRepositoryList(),
+                getProfileList(),
+                BiFunction<List<GitHubRepository>, GitHubProfile, List<Model>> { repositoryList, profile ->
+                    val modelList = mutableListOf<Model>()
+//                    val model = mutableListOf(Model(
+//                            html_url = repositoryList.map { it.html_url },
+//                            name = repositoryList.map { it.name },
+//                            language = repositoryList.map { it.language },
+//                            pushed_at = repositoryList.map { it.pushed_at },
+//                            avatar_url = profile.avatar_url
+//                    ))
+
+//                    val html_url = repositoryList.map { it.html_url }
+//                    modelList = repositoryList.map {
+//                        it.html_url,
+//                        it.name,
+//                        it.language,
+//                        it.pushed_at,
+//                        profile.avatar_url
+//                    }
+
+                        repositoryList.map {
+                            val model = Model(
+                                    html_url = it.html_url,
+                                    name = it.name,
+                                    language = it.language,
+                                    pushed_at = it.pushed_at,
+                                    avatar_url = profile.avatar_url
+                            )
+                            modelList.add(model)
+                        }
+
+
+//                    for (repository in repositoryList) {
+//                        val model = Model(
+//                                html_url = repository.html_url,
+//                                name = repository.name,
+//                                language = repository.language,
+//                                pushed_at = repository.pushed_at,
+//                                avatar_url = profile.avatar_url
+//                        )
+//                        modelList.add(model)
+//                    }
+                    modelList
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -65,21 +94,21 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun single1(): Single<List<GitHubRepository>> {
+    private fun getRepositoryList(): Single<List<GitHubRepository>> {
         return createService()
-                .getRepository(CONSTANT_USER_NAME)
+                .getGitHubRepositoryList(CONSTANT_USER_NAME)
                 .map {
                     val comparator = compareByDescending<GitHubRepository> { it.pushed_at }.thenBy { it.name }
                     it.sortedWith(comparator)
                 }
     }
 
-    private fun single2(): Single<GitHubProfile> {
+    private fun getProfileList(): Single<GitHubProfile> {
         return createService()
-                .getProfile(CONSTANT_USER_NAME)
+                .getGitHubProfile(CONSTANT_USER_NAME)
     }
 
-    private fun createRecyclerView(dataList: List<Model>) {
+    private fun createRecyclerView(modelList: List<Model>) {
         val recyclerView: RecyclerView = findViewById(R.id.main_recycler_view)
 
         // recyclerViewのレイアウトサイズを変更しない設定をONにする
@@ -94,7 +123,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
 
         // Adapterを生成してRecyclerViewにセット
-        mainAdapter = MainAdapter(dataList)
+        mainAdapter = MainAdapter(modelList)
         recyclerView.adapter = mainAdapter
     }
 }
