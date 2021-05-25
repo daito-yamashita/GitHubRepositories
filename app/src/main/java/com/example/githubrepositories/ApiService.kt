@@ -7,6 +7,8 @@ import retrofit2.http.Path
 
 interface ApiService {
     @GET("users/{user}/repos")
+    fun getRepository(@Path("user") user: String): Single<List<GitHubRepository>>
 
-    fun getGitHub(@Path("user") user: String): Single<List<GitHubResponse>>
+    @GET("users/{user}")
+    fun getProfile(@Path("user") user: String): Single<GitHubProfile>
 }
