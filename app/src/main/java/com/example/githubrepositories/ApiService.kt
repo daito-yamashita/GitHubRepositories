@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface ApiService {
-    @GET("users/{user}/repos")
+    @GET("users/{user}/repos?sort=updated&per_page=100")
     fun getRepository(@Path("user") user: String): Single<List<GitHubRepository>>
 
     @GET("users/{user}")
