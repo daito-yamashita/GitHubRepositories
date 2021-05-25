@@ -33,45 +33,16 @@ class MainActivity : AppCompatActivity() {
                 getProfileList(),
                 BiFunction<List<GitHubRepository>, GitHubProfile, List<Model>> { repositoryList, profile ->
                     val modelList = mutableListOf<Model>()
-//                    val model = mutableListOf(Model(
-//                            html_url = repositoryList.map { it.html_url },
-//                            name = repositoryList.map { it.name },
-//                            language = repositoryList.map { it.language },
-//                            pushed_at = repositoryList.map { it.pushed_at },
-//                            avatar_url = profile.avatar_url
-//                    ))
-
-//                    val html_url = repositoryList.map { it.html_url }
-//                    modelList = repositoryList.map {
-//                        it.html_url,
-//                        it.name,
-//                        it.language,
-//                        it.pushed_at,
-//                        profile.avatar_url
-//                    }
-
-                        repositoryList.map {
-                            val model = Model(
-                                    html_url = it.html_url,
-                                    name = it.name,
-                                    language = it.language,
-                                    pushed_at = it.pushed_at,
-                                    avatar_url = profile.avatar_url
-                            )
-                            modelList.add(model)
-                        }
-
-
-//                    for (repository in repositoryList) {
-//                        val model = Model(
-//                                html_url = repository.html_url,
-//                                name = repository.name,
-//                                language = repository.language,
-//                                pushed_at = repository.pushed_at,
-//                                avatar_url = profile.avatar_url
-//                        )
-//                        modelList.add(model)
-//                    }
+                    repositoryList.map {
+                        val model = Model(
+                                html_url = it.html_url,
+                                name = it.name,
+                                language = it.language,
+                                pushed_at = it.pushed_at,
+                                avatar_url = profile.avatar_url
+                        )
+                        modelList.add(model)
+                    }
                     modelList
                 })
                 .subscribeOn(Schedulers.io())
@@ -91,7 +62,6 @@ class MainActivity : AppCompatActivity() {
                 }, {
                     Log.d("TAG", "failure = $it")
                 })
-
     }
 
     private fun getRepositoryList(): Single<List<GitHubRepository>> {
