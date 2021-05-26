@@ -20,7 +20,7 @@ val httpBuilder: OkHttpClient.Builder get() {
                     .method(original.method, original.body)
                     .build()
 
-            return@addInterceptor chain.proceed(request)
+            chain.proceed(request)
         }
                 .readTimeout(30,TimeUnit.SECONDS)
 
