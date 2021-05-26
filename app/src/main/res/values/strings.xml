@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">GitHub Repositories</string>
+    <string name="title">title</string>
+    <string name="language">language</string>
+    <string name="updated">updated</string>
+    <string name="todo">TODO</string>
 </resources>
