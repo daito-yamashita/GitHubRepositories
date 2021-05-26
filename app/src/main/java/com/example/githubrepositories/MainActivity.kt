@@ -13,13 +13,13 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-const val CONSTANT_USER_NAME: String = "daito-yamashita"
+const val USER_NAME : String = "daito-yamashita"
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var mainAdapter: MainAdapter
+    private lateinit var mainAdapter : MainAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState : Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -51,8 +51,8 @@ class MainActivity : AppCompatActivity() {
                     // RecyclerViewの作成、更新を行う
                     createRecyclerView(it)
                     mainAdapter.setOnCellClickListener(
-                            object : MainAdapter.OnCellClickListener {
-                                override fun onItemClick(model: Model) {
+                            object  : MainAdapter.OnCellClickListener {
+                                override fun onItemClick(model : Model) {
                                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(model.html_url))
                                     startActivity(intent)
                                 }
@@ -64,22 +64,22 @@ class MainActivity : AppCompatActivity() {
                 })
     }
 
-    private fun getRepositoryList(): Single<List<GitHubRepository>> {
+    private fun getRepositoryList() : Single<List<GitHubRepository>> {
         return createService()
-                .getGitHubRepositoryList(CONSTANT_USER_NAME)
+                .getGitHubRepositoryList(USER_NAME)
                 .map {
                     val comparator = compareByDescending<GitHubRepository> { it.pushed_at }.thenBy { it.name }
                     it.sortedWith(comparator)
                 }
     }
 
-    private fun getProfileList(): Single<GitHubProfile> {
+    private fun getProfileList() : Single<GitHubProfile> {
         return createService()
-                .getGitHubProfile(CONSTANT_USER_NAME)
+                .getGitHubProfile(USER_NAME)
     }
 
-    private fun createRecyclerView(modelList: List<Model>) {
-        val recyclerView: RecyclerView = findViewById(R.id.main_recycler_view)
+    private fun createRecyclerView(modelList : List<Model>) {
+        val recyclerView : RecyclerView = findViewById(R.id.main_recycler_view)
 
         // recyclerViewのレイアウトサイズを変更しない設定をONにする
         recyclerView.setHasFixedSize(true)
@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.addItemDecoration(itemDecoration)
 
         // recyclerViewにlayoutManagerをセットする
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+        val layoutManager : RecyclerView.LayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
 
         // Adapterを生成してRecyclerViewにセット

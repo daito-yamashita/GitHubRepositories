@@ -11,25 +11,25 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
-class MainAdapter internal constructor(private var modelList: List<Model>) : RecyclerView.Adapter<MainViewHolder>() {
-    private lateinit var listener: OnCellClickListener
+class MainAdapter internal constructor(private var modelList : List<Model>) : RecyclerView.Adapter<MainViewHolder>() {
+    private lateinit var listener : OnCellClickListener
 
     interface OnCellClickListener {
-        fun onItemClick(model: Model)
+        fun onItemClick(model : Model)
     }
 
-    fun setOnCellClickListener(listener: OnCellClickListener) {
+    fun setOnCellClickListener(listener : OnCellClickListener) {
         this.listener = listener
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
+    override fun onCreateViewHolder(parent : ViewGroup, viewType : Int) : MainViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.view_holder, parent, false)
         return MainViewHolder(view)
     }
 
     // 各部品に持たせたいデータを割り当てるメソッド
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
+    override fun onBindViewHolder(holder : MainViewHolder, position : Int) {
         val model = modelList[position]
 
         holder.title.text = model.name
@@ -51,12 +51,12 @@ class MainAdapter internal constructor(private var modelList: List<Model>) : Rec
         }
     }
 
-    override fun getItemCount(): Int {
+    override fun getItemCount() : Int {
         return modelList.size
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun getDateDifference(updatedDataTimeText: String?): CharSequence {
+    private fun getDateDifference(updatedDataTimeText : String?) : CharSequence {
         var updatedText = "updated "
         val nowDateTime = OffsetDateTime.now()
         val updatedDateTime = OffsetDateTime.parse(updatedDataTimeText, DateTimeFormatter.ISO_DATE_TIME)
