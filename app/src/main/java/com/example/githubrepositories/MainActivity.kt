@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -16,7 +17,11 @@ const val USER_NAME: String = "daito-yamashita"
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var modelList: MutableList<Model>
+    private lateinit var recyclerView: RecyclerView
     private lateinit var mainAdapter: MainAdapter
+    private lateinit var mainLayoutManager: RecyclerView.LayoutManager
+    private lateinit var itemTouchHelper: ItemTouchHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             getRepositoryList(),
             getProfileList(),
             { repositoryList, profile ->
-                val modelList = mutableListOf<Model>()
+                modelList = mutableListOf()
                 repositoryList.map {
                     val model = Model(
                         html_url = it.html_url,
@@ -49,14 +54,14 @@ class MainActivity : AppCompatActivity() {
             .subscribe({
                 // RecyclerViewの作成、更新を行う
                 createRecyclerView(it)
-                mainAdapter.setOnCellClickListener(
-                    object : MainAdapter.OnCellClickListener {
-                        override fun onItemClick(model: Model) {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(model.html_url))
-                            startActivity(intent)
-                        }
-                    }
-                )
+
+                // RecyclerViewのドラッグ、スワイプ操作に関する設定
+                itemTouchHelper = ItemTouchHelper(getRecyclerViewSimpleCallBack())
+                itemTouchHelper.attachToRecyclerView(recyclerView)
+
+                // RecyclerViewのクリックに関する設定
+                mainAdapter.setOnCellClickListener(getOnCellClickListener())
+
                 Log.d("TAG", "subscribe = $it")
             }, {
                 Log.d("TAG", "failure = $it")
@@ -79,7 +84,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createRecyclerView(modelList: List<Model>) {
-        val recyclerView: RecyclerView = findViewById(R.id.main_recycler_view)
+        recyclerView = findViewById(R.id.main_recycler_view)
 
         // recyclerViewのレイアウトサイズを変更しない設定をONにする
         recyclerView.setHasFixedSize(true)
@@ -89,11 +94,48 @@ class MainActivity : AppCompatActivity() {
         recyclerView.addItemDecoration(itemDecoration)
 
         // recyclerViewにlayoutManagerをセットする
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
+        mainLayoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = mainLayoutManager
 
         // Adapterを生成してRecyclerViewにセット
         mainAdapter = MainAdapter(modelList)
         recyclerView.adapter = mainAdapter
     }
+
+    private fun getRecyclerViewSimpleCallBack() =
+        object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+            ItemTouchHelper.LEFT
+        ) {
+            // ドラッグした時
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val fromPosition = viewHolder.absoluteAdapterPosition
+                val toPosition = target.absoluteAdapterPosition
+
+                // modelListのデータを削除してから追加している
+                modelList.add(toPosition, modelList.removeAt(fromPosition))
+                mainAdapter.notifyItemMoved(fromPosition, toPosition)
+                return true
+            }
+
+            // スワイプした時
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                viewHolder.let {
+                    modelList.removeAt(viewHolder.absoluteAdapterPosition)
+                    mainAdapter.notifyItemRemoved(viewHolder.absoluteAdapterPosition)
+                }
+            }
+        }
+
+    private fun getOnCellClickListener() =
+        object : MainAdapter.OnCellClickListener {
+            override fun onItemClick(model: Model) {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(model.html_url))
+                startActivity(intent)
+            }
+        }
 }
