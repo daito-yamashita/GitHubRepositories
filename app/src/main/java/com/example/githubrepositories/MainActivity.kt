@@ -17,7 +17,7 @@ const val USER_NAME: String = "daito-yamashita"
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var modelList: MutableList<Model>
+    private val modelList: MutableList<Model> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
     private lateinit var mainAdapter: MainAdapter
     private lateinit var mainLayoutManager: RecyclerView.LayoutManager
@@ -36,22 +36,21 @@ class MainActivity : AppCompatActivity() {
             getRepositoryList(),
             getProfileList(),
             { repositoryList, profile ->
-                modelList = mutableListOf()
                 repositoryList.map {
-                    val model = Model(
+                    Model(
                         html_url = it.html_url,
                         name = it.name,
                         language = it.language,
                         pushed_at = it.pushed_at,
                         avatar_url = profile.avatar_url,
                     )
-                    modelList.add(model)
                 }
-                modelList
             })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                modelList.addAll(it)
+
                 // RecyclerViewの作成、更新を行う
                 createRecyclerView(it)
 
