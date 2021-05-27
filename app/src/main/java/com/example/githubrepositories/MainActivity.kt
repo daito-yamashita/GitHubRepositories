@@ -49,10 +49,11 @@ class MainActivity : AppCompatActivity() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                modelList.addAll(it)
+
+                modelList += it
 
                 // RecyclerViewの作成、更新を行う
-                createRecyclerView(it)
+                createRecyclerView(modelList)
 
                 // RecyclerViewのドラッグ、スワイプ操作に関する設定
                 itemTouchHelper = ItemTouchHelper(getRecyclerViewSimpleCallBack())
@@ -118,6 +119,7 @@ class MainActivity : AppCompatActivity() {
                 // modelListのデータを削除してから追加している
                 modelList.add(toPosition, modelList.removeAt(fromPosition))
                 mainAdapter.notifyItemMoved(fromPosition, toPosition)
+                
                 return true
             }
 
