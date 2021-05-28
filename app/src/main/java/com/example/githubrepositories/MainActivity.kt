@@ -17,7 +17,7 @@ const val USER_NAME: String = "daito-yamashita"
 
 class MainActivity : AppCompatActivity() {
 
-    private val modelList: MutableList<Model> = mutableListOf()
+    private var modelList: MutableList<Model> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
     private lateinit var mainAdapter: MainAdapter
     private lateinit var mainLayoutManager: RecyclerView.LayoutManager
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 
-                modelList += it
+                modelList = it.toMutableList()
 
                 // RecyclerViewの作成、更新を行う
                 createRecyclerView(modelList)
@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getRepositoryList(): Single<List<GitHubRepository>> {
         return createService()
-            .getGitHubRepositoryList(USER_NAME)
+            .getGitHubRepositoryList(USER_NAME, 2)
             .map { it ->
                 val comparator =
                     compareByDescending<GitHubRepository> { it.pushed_at }.thenBy { it.name }
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
     private fun getRecyclerViewSimpleCallBack() =
         object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-            ItemTouchHelper.LEFT
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
         ) {
             // ドラッグした時
             override fun onMove(
