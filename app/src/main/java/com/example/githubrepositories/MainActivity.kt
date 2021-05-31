@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -14,6 +15,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 const val USER_NAME: String = "daito-yamashita"
+const val NOW_PAGE: Int = 1
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,11 +25,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainLayoutManager: RecyclerView.LayoutManager
     private lateinit var itemTouchHelper: ItemTouchHelper
 
+    private var nowPage: Int = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         fetchMyData()
+
+        setupNextButton()
 
     }
 
@@ -70,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getRepositoryList(): Single<List<GitHubRepository>> {
         return createService()
-            .getGitHubRepositoryList(USER_NAME, 2)
+            .getGitHubRepositoryList(USER_NAME, nowPage)
             .map { it ->
                 val comparator =
                     compareByDescending<GitHubRepository> { it.pushed_at }.thenBy { it.name }
@@ -139,4 +145,12 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+
+    private fun setupNextButton() {
+        val nextButton = findViewById<Button>(R.id.next_button)
+        nextButton.setOnClickListener{
+            nowPage += 1
+            fetchMyData()
+        }
+    }
 }
