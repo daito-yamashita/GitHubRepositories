@@ -7,7 +7,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
-    @GET("users/{user}/repos?sort=updated&per_page=3")
+    @GET("users/{user}/repos?sort=updated&per_page=10")
     fun getGitHubRepositoryList(
             @Path("user") user: String,
             @Query("page") page: Int,
