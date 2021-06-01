@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
 
         setupNextButton()
 
+        setupPrevioudButton()
+
     }
 
     private fun fetchMyData() {
@@ -55,16 +57,17 @@ class MainActivity : AppCompatActivity() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                // とりあえず動く書き方したけど、もっといい書き方ありそう
+                modelList.clear()
+                modelList.addAll(it.toMutableList())
+
                 if (isNextButtonPress) {
                     // ２回目以降の処理
                     // ２回目以降はnotifyDataSetChanged()でListの変更を伝える
 
-                    modelList.addAll(it.toMutableList())
                     mainAdapter.notifyDataSetChanged()
                 } else {
                     // 初回起動時の処理
-
-                    modelList = it.toMutableList()
 
                     // RecyclerViewの作成、更新を行う
                     createRecyclerView(modelList)
@@ -157,6 +160,14 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+
+    private fun setupPrevioudButton() {
+        val previousButton = findViewById<Button>(R.id.previous_button)
+        previousButton.setOnClickListener{
+            nowPage -= 1
+            fetchMyData()
+        }
+    }
 
     private fun setupNextButton() {
         val nextButton = findViewById<Button>(R.id.next_button)
