@@ -15,7 +15,6 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 const val USER_NAME: String = "daito-yamashita"
-const val NOW_PAGE: Int = 1
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var itemTouchHelper: ItemTouchHelper
 
     private var nowPage: Int = 1
+    private var isNextButtonPress: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,18 +55,30 @@ class MainActivity : AppCompatActivity() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                if (isNextButtonPress) {
+                    // ２回目以降の処理
+                    // ２回目以降はnotifyDataSetChanged()でListの変更を伝える
 
-                modelList.plusAssign(it.toMutableList())
+                    modelList.addAll(it.toMutableList())
+                    mainAdapter.notifyDataSetChanged()
+                } else {
+                    // 初回起動時の処理
 
-                // RecyclerViewの作成、更新を行う
-                createRecyclerView(modelList)
+                    modelList = it.toMutableList()
 
-                // RecyclerViewのドラッグ、スワイプ操作に関する設定
-                itemTouchHelper = ItemTouchHelper(getRecyclerViewSimpleCallBack())
-                itemTouchHelper.attachToRecyclerView(recyclerView)
+                    // RecyclerViewの作成、更新を行う
+                    createRecyclerView(modelList)
 
-                // RecyclerViewのクリックに関する設定
-                mainAdapter.setOnCellClickListener(getOnCellClickListener())
+                    // RecyclerViewのドラッグ、スワイプ操作に関する設定
+                    itemTouchHelper = ItemTouchHelper(getRecyclerViewSimpleCallBack())
+                    itemTouchHelper.attachToRecyclerView(recyclerView)
+
+                    // RecyclerViewのクリックに関する設定
+                    mainAdapter.setOnCellClickListener(getOnCellClickListener())
+
+                    // フラグの切り替え
+                    isNextButtonPress = true
+                }
 
                 Log.d("TAG", "subscribe = $it")
             }, {
@@ -125,7 +137,7 @@ class MainActivity : AppCompatActivity() {
                 // modelListのデータを削除してから追加している
                 modelList.add(toPosition, modelList.removeAt(fromPosition))
                 mainAdapter.notifyItemMoved(fromPosition, toPosition)
-                
+
                 return true
             }
 
