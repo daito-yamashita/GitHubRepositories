@@ -4,4 +4,6 @@
     <string name="language">language</string>
     <string name="updated">updated</string>
     <string name="todo">TODO</string>
+    <string name="previous"><![CDATA[< Previous]]></string>
+    <string name="next"><![CDATA[Next >]]></string>
 </resources>
