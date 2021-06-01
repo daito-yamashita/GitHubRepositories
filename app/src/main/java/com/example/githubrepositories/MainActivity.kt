@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 
-                modelList = it.toMutableList()
+                modelList.plusAssign(it.toMutableList())
 
                 // RecyclerViewの作成、更新を行う
                 createRecyclerView(modelList)
