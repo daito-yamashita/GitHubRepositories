@@ -53,7 +53,8 @@ class MainActivity : AppCompatActivity() {
                                 name = it.name,
                                 language = it.language,
                                 pushed_at = it.pushed_at,
-                                avatar_url = profile.avatar_url,
+                                avatar_url = it.owner["avatar_url"] as String
+//                                avatar_url = profile.avatar_url,
                         )
                     }
                 })
@@ -169,7 +170,7 @@ class MainActivity : AppCompatActivity() {
             }
 
     private fun setupPreviousButton() {
-        previousButton = findViewById<Button>(R.id.previous_button)
+        previousButton = findViewById(R.id.previous_button)
         previousButton.setOnClickListener {
             nowPage -= 1
             fetchMyData()
@@ -181,7 +182,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNextButton() {
-        nextButton = findViewById<Button>(R.id.next_button)
+        nextButton = findViewById(R.id.next_button)
         nextButton.setOnClickListener {
             nowPage += 1
             fetchMyData()
