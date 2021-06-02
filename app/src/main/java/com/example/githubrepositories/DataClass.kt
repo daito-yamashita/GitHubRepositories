@@ -5,10 +5,7 @@ data class GitHubRepository(
     val name : String,
     val language : String?,
     val pushed_at : String,
-)
-
-data class GitHubProfile(
-    val avatar_url : String
+    val owner : Map<String, Any>,
 )
 
 class Model(
