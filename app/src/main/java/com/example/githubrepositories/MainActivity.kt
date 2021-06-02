@@ -43,21 +43,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchMyData() {
-        Single.zip(
-                getRepositoryList(),
-                getProfileList(),
-                { repositoryList, profile ->
-                    repositoryList.map {
+        getRepositoryList()
+                .map {
+                    it.map { gitHubRepository ->
                         Model(
-                                html_url = it.html_url,
-                                name = it.name,
-                                language = it.language,
-                                pushed_at = it.pushed_at,
-                                avatar_url = it.owner["avatar_url"] as String
-//                                avatar_url = profile.avatar_url,
+                                html_url = gitHubRepository.html_url,
+                                name = gitHubRepository.name,
+                                language = gitHubRepository.language,
+                                pushed_at = gitHubRepository.pushed_at,
+                                avatar_url = gitHubRepository.owner["avatar_url"] as String
                         )
                     }
-                })
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -105,11 +102,6 @@ class MainActivity : AppCompatActivity() {
                             compareByDescending<GitHubRepository> { it.pushed_at }.thenBy { it.name }
                     it.sortedWith(comparator)
                 }
-    }
-
-    private fun getProfileList(): Single<GitHubProfile> {
-        return createService()
-                .getGitHubProfile(USER_NAME)
     }
 
     private fun createRecyclerView(modelList: List<Model>) {

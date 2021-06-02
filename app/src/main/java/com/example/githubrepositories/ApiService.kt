@@ -13,7 +13,4 @@ interface ApiService {
             @Query("page") page: Int,
 
     ): Single<List<GitHubRepository>>
-
-    @GET("users/{user}")
-    fun getGitHubProfile(@Path("user") user: String): Single<GitHubProfile>
 }

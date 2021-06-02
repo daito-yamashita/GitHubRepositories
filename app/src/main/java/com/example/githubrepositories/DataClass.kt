@@ -8,10 +8,6 @@ data class GitHubRepository(
     val owner : Map<String, Any>,
 )
 
-data class GitHubProfile(
-    val avatar_url : String
-)
-
 class Model(
     val html_url : String,
     val name : String,
